@@ -1,12 +1,12 @@
 const { connectDB } = require("./src/db/connect");
-const { UserModel } = require("./src/db/models/UsersMailrelay");
+const { User } = require("./src/db/models/UsersMailrelay");
 const { operationChangeFunction } = require("./src/events/changes/operatioRegister");
 const { userChangeFunction } = require("./src/events/changes/userRegister");
 
 const handler = async (event, context) => {
   await connectDB();
 
-  const users = await UserModel.find({ status_trigger: "PENDING" });
+  const users = await User.find({ status_trigger: "PENDING" });
 
   if (users.length === 0) {
     return {
