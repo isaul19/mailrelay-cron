@@ -19,7 +19,7 @@ const updateLegalPerson = async (user) => {
   const beforeChangeEmail = "";
 
   MODEL_PJ.forEach((key) => {
-    const valueUpdate = updatedFields?.[`${key}`];
+    const valueUpdate = user?.[`${key}`];
 
     if (valueUpdate && key === "commercial_name") {
       custom_fields[`${RAZON_SOCIAL}`] = valueUpdate.toUpperCase().trim();

@@ -10,15 +10,15 @@ const { CELULAR, APELLIDO_PATERNO, APELLIDO_MATERNO, TIPO_USUARIO } = FIELDS;
 
 const insertNaturalPerson = async () => {};
 
-const updateNaturalPerson = async () => {
+const updateNaturalPerson = async (user) => {
   const body = {};
   const custom_fields = {};
-  const { email } = fullDocument;
+  const { email } = user;
   // WARNING no existe forma de saber el anterior email
   const beforeChangeEmail = "";
 
   MODEL_PN.forEach((key) => {
-    const valueUpdate = updatedFields?.[`${key}`];
+    const valueUpdate = user?.[`${key}`];
 
     if (valueUpdate && key === "name") {
       body.name = valueUpdate;
