@@ -1,3 +1,5 @@
 const insertNaturalPerson = async () => {};
 
-exports.insertNaturalPerson = insertNaturalPerson;
+const updateNaturalPerson = async () => {};
+
+module.exports = { insertNaturalPerson, updateNaturalPerson };

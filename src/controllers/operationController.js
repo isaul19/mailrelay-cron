@@ -50,4 +50,6 @@ const operationSigned = async (user) => {
   }
 };
 
-exports.operationSigned = operationSigned;
+const assignSpecialService = async () => {};
+
+module.exports = { operationSigned, assignSpecialService };

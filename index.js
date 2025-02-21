@@ -28,6 +28,9 @@ const handler = async (event, context) => {
       case "operationSigned":
         return await operationChangeFunction(user);
     }
+
+    user.status_trigger = "COMPLETED";
+    await user.save();
   }
 };
 
