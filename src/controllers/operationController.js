@@ -1,5 +1,5 @@
 const { FIELDS, LEVELS, GROUPS } = require("../global/constants");
-const { getSubscribers } = require("../global/mailrelayService");
+const { getSubscribers, patchSubscriber } = require("../global/mailrelayService");
 
 const operationSigned = async (user) => {
   const custom_fields = {};
@@ -50,6 +50,32 @@ const operationSigned = async (user) => {
   }
 };
 
-const assignSpecialService = async () => {};
+const assignSpecialService = async (user) => {
+  const { TARIFA_ESPECIAL } = FIELDS;
+  const custom_fields = {};
+  const { email } = user;
+  const special_service = user?.special_service ? user.special_service : [];
+
+  const [subscriber] = await getSubscribers({
+    "q[email_eq]": email,
+  });
+
+  if (subscriber) {
+    const assignValue = Object.values(special_service).some((val) => val !== 0);
+
+    if (Object.values(special_service).length > 0 && assignValue) {
+      custom_fields[`${TARIFA_ESPECIAL}`] = true;
+    } else {
+      custom_fields[`${TARIFA_ESPECIAL}`] = false;
+    }
+
+    await patchSubscriber(subscriber.id, {
+      custom_fields: {
+        ...subscriber.custom_fields,
+        ...custom_fields,
+      },
+    });
+  }
+};
 
 module.exports = { operationSigned, assignSpecialService };

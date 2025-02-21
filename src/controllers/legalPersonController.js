@@ -15,6 +15,7 @@ const updateLegalPerson = async (user) => {
   const body = {};
   const custom_fields = {};
   const { email } = user;
+  // WARNING no existe forma de saber el anterior email
   const beforeChangeEmail = "";
 
   MODEL_PJ.forEach((key) => {
