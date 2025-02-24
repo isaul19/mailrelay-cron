@@ -5,19 +5,9 @@ const {
   ECONOMIC_ACTIVITY,
   MODEL_PJ,
 } = require("../global/constants");
-const {
-  patchSubscriber,
-  deleteSubscriber,
-  postSubscriber,
-} = require("../global/mailrelayService");
+const { patchSubscriber, deleteSubscriber, postSubscriber } = require("../global/mailrelayService");
 
-const {
-  CELULAR,
-  RAZON_SOCIAL,
-  ACTIVIDAD_ECONOMICA,
-  INICIO_ACTIVIDADES,
-  TIPO_USUARIO,
-} = FIELDS;
+const { CELULAR, RAZON_SOCIAL, ACTIVIDAD_ECONOMICA, INICIO_ACTIVIDADES, TIPO_USUARIO } = FIELDS;
 
 const insertLegalPerson = async (user) => {
   const { SIN_OPERACION_PJ, GENERAL } = GROUPS;
@@ -37,13 +27,9 @@ const insertLegalPerson = async (user) => {
     const group_ids = [];
     const custom_fields = {};
 
-    custom_fields[`${TIPO_USUARIO}`] = Object.values(
-      FIELD_OPTIONS[TIPO_USUARIO][1]
-    )[0];
+    custom_fields[`${TIPO_USUARIO}`] = Object.values(FIELD_OPTIONS[TIPO_USUARIO][1])[0];
 
-    custom_fields[`${RAZON_SOCIAL}`] = company.commercial_name
-      .toUpperCase()
-      .trim();
+    custom_fields[`${RAZON_SOCIAL}`] = company.commercial_name.toUpperCase().trim();
 
     custom_fields[`${INICIO_ACTIVIDADES}`] = dateToString(company.constitucion);
     custom_fields[`${CELULAR}`] = company.cellphone;
@@ -81,9 +67,7 @@ const insertLegalPerson = async (user) => {
     console.log({
       process: "ERROR CONTROLADOR REGISTRO DE PJ",
       error: error.response
-        ? `${JSON.stringify(error.response.data)}, code: ${
-            error.response.status
-          }`
+        ? `${JSON.stringify(error.response.data)}, code: ${error.response.status}`
         : error,
     });
   }
@@ -93,8 +77,7 @@ const updateLegalPerson = async (user) => {
   const body = {};
   const custom_fields = {};
   const { email } = user;
-  // WARNING no existe forma de saber el anterior email
-  const beforeChangeEmail = "";
+  const beforeChangeEmail = user.beforeEmail;
 
   MODEL_PJ.forEach((key) => {
     const valueUpdate = user?.[`${key}`];
