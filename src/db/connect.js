@@ -1,3 +1,4 @@
+const { MONGO_URI_WEB } = require("../env/keys_dev.js");
 const mongoose = require("mongoose");
 
 let conn = null;
@@ -5,7 +6,7 @@ let conn = null;
 const connectDB = async () => {
   try {
     if (conn === null) {
-      conn = await mongoose.connect(process.env.MONGO_URI);
+      conn = await mongoose.connect(MONGO_URI_WEB);
       console.log("Connected to MongoDB");
     }
     return conn;

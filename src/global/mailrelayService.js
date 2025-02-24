@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const { URL_MAILRELAY, TOKEN_MAILRELAY } = require("../env/keys");
+const { URL_MAILRELAY, TOKEN_MAILRELAY } = require("../env/keys_dev.js");
 
 const mailRelayClient = axios.create({
   baseURL: URL_MAILRELAY,
