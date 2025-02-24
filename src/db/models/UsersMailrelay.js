@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
   cellphone: String,
   department: String,
   is_active: Boolean,
+  is_active_fields: Boolean,
   content_promo: Boolean,
   company: {
     commercial_name: String,
@@ -38,7 +39,13 @@ const UserSchema = new mongoose.Schema({
   },
   trigger: {
     type: String,
-    enum: ["companyUpdate", "operationSigned", "userRegister", "userUpdate", "userUpdatePromo"],
+    enum: [
+      "companyUpdate",
+      "operationSigned",
+      "userRegister",
+      "userUpdate",
+      "userUpdatePromo",
+    ],
     required: true,
   },
   status_trigger: {
