@@ -5,11 +5,7 @@ const {
   patchSubscriber,
   getSubscribers,
 } = require("../global/mailrelayService");
-const {
-  FIELDS,
-  FIELD_OPTIONS,
-  GROUPS,
-} = require("../global/constants");
+const { FIELDS, FIELD_OPTIONS, GROUPS } = require("../global/constants");
 const { CELULAR, APELLIDO_PATERNO, APELLIDO_MATERNO, TIPO_USUARIO } = FIELDS;
 
 const insertNaturalPerson = async (user) => {
@@ -74,14 +70,15 @@ const insertNaturalPerson = async (user) => {
       "ERROR CONTROLADOR REGISTRO DE PN:",
       error.response ? error.response : error
     );
-    const msgAlert = console.log({
+
+    console.log({
       process: "ERROR CONTROLADOR REGISTRO DE PN",
       error: error.response
         ? `${JSON.stringify(error.response.data)}, code: ${
             error.response.status
           }`
         : error,
-    });  
+    });
   }
 };
 

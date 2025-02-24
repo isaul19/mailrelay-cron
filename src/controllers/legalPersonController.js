@@ -5,7 +5,6 @@ const {
   ECONOMIC_ACTIVITY,
   MODEL_PJ,
 } = require("../global/constants");
-const { User } = require("../db/models/UsersMailrelay");
 const {
   patchSubscriber,
   deleteSubscriber,
@@ -31,7 +30,7 @@ const insertLegalPerson = async (user) => {
 
     const body = {
       status: "active",
-      email: company.email.toLowerCase(),
+      email: company.email?.toLowerCase(),
       city: company.department,
     };
 
@@ -79,7 +78,7 @@ const insertLegalPerson = async (user) => {
       "ERROR CONTROLADOR REGISTRO DE PJ:",
       error.response ? error.response : error
     );
-    const msgAlert = console.log({
+    console.log({
       process: "ERROR CONTROLADOR REGISTRO DE PJ",
       error: error.response
         ? `${JSON.stringify(error.response.data)}, code: ${
