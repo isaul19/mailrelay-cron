@@ -8,36 +8,8 @@ const {
 const { User } = require("../db/models/UsersMailrelay");
 
 const changePersonStatus = async (user) => {
-  // const { level, company: companyId, is_active: currentIsActive } = user;
-  // const { is_active, content_promo } = user;
-  // let email;
-  // if (level === "30") {
-  //   email = fullDocument.email;
-  // } else if (level === "31") {
-  //   const company = await Company.findById(companyId, "email");
-  //   email = company.email;
-  // }
-  // if (email) {
-  //   if (is_active !== undefined) {
-  //     await changeStatus(fullDocument, is_active, email);
-  //     if (is_active) {
-  //       await updateUser(fullDocument, email);
-  //     }
-  //   } else if (currentIsActive === true && content_promo !== undefined) {
-  //     await changeStatus(fullDocument, content_promo, email);
-  //     if (currentIsActive === true && content_promo) {
-  //       await updateUser(fullDocument, email);
-  //     }
-  //   }
-  // }
   try {
-    const {
-      level,
-      company,
-      is_active: currentIsActive,
-      is_active_fields,
-      content_promo,
-    } = user;
+    const { level, company, is_active: currentIsActive, is_active_fields, content_promo } = user;
 
     let email;
     if (level === "30") {
@@ -69,9 +41,7 @@ const changePersonStatus = async (user) => {
     console.log({
       process: "ERROR CONTROLADOR CAMBIO DE ESTADO DE USUARIO",
       error: error.response
-        ? `${JSON.stringify(error.response.data)}, code: ${
-            error.response.status
-          }`
+        ? `${JSON.stringify(error.response.data)}, code: ${error.response.status}`
         : error,
     });
   }
@@ -138,31 +108,19 @@ const updateUser = async (fullDocument, email) => {
           birth_activity: {
             $ifNull: [
               {
-                $cond: [
-                  { $eq: ["$level", "31"] },
-                  "$company.constitucion",
-                  "$nacimiento",
-                ],
+                $cond: [{ $eq: ["$level", "31"] }, "$company.constitucion", "$nacimiento"],
               },
               null,
             ],
           },
           economic_activity: { $ifNull: ["$company.economic_activity", null] },
           cellphone: {
-            $cond: [
-              { $eq: ["$level", "31"] },
-              "$company.cellphone",
-              "$cellphone",
-            ],
+            $cond: [{ $eq: ["$level", "31"] }, "$company.cellphone", "$cellphone"],
           },
           department: {
             $ifNull: [
               {
-                $cond: [
-                  { $eq: ["$level", "31"] },
-                  "$company.department",
-                  "$department",
-                ],
+                $cond: [{ $eq: ["$level", "31"] }, "$company.department", "$department"],
               },
               null,
             ],
