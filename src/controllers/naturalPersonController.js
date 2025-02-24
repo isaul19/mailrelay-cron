@@ -10,16 +10,7 @@ const { CELULAR, APELLIDO_PATERNO, APELLIDO_MATERNO, TIPO_USUARIO } = FIELDS;
 
 const insertNaturalPerson = async (user) => {
   const { SIN_OPERACION_PN, GENERAL } = GROUPS;
-  const {
-    email,
-    name,
-    nacimiento,
-    department,
-    cellphone,
-    lname_p,
-    lname_m,
-    content_promo,
-  } = user;
+  const { email, name, nacimiento, department, cellphone, lname_p, lname_m, content_promo } = user;
 
   try {
     const body = {
@@ -33,9 +24,7 @@ const insertNaturalPerson = async (user) => {
     const custom_fields = {};
 
     // tipo de usuario
-    custom_fields[`${TIPO_USUARIO}`] = Object.values(
-      FIELD_OPTIONS[TIPO_USUARIO][0]
-    )[0];
+    custom_fields[`${TIPO_USUARIO}`] = Object.values(FIELD_OPTIONS[TIPO_USUARIO][0])[0];
 
     // celular
     custom_fields[`${CELULAR}`] = cellphone;
@@ -74,9 +63,7 @@ const insertNaturalPerson = async (user) => {
     console.log({
       process: "ERROR CONTROLADOR REGISTRO DE PN",
       error: error.response
-        ? `${JSON.stringify(error.response.data)}, code: ${
-            error.response.status
-          }`
+        ? `${JSON.stringify(error.response.data)}, code: ${error.response.status}`
         : error,
     });
   }
@@ -86,8 +73,7 @@ const updateNaturalPerson = async (user) => {
   const body = {};
   const custom_fields = {};
   const { email } = user;
-  // WARNING no existe forma de saber el anterior email
-  const beforeChangeEmail = "";
+  const beforeChangeEmail = user.beforeEmail;
 
   MODEL_PN.forEach((key) => {
     const valueUpdate = user?.[`${key}`];
