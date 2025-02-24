@@ -6,6 +6,8 @@ const {
   MODEL_PJ,
 } = require("../global/constants");
 const { patchSubscriber, deleteSubscriber, postSubscriber } = require("../global/mailrelayService");
+const { dateToString } = require("../utils/dateToString");
+const { selectActivity } = require("../utils/selectActivity");
 
 const { CELULAR, RAZON_SOCIAL, ACTIVIDAD_ECONOMICA, INICIO_ACTIVIDADES, TIPO_USUARIO } = FIELDS;
 
@@ -31,7 +33,7 @@ const insertLegalPerson = async (user) => {
 
     custom_fields[`${RAZON_SOCIAL}`] = company.commercial_name.toUpperCase().trim();
 
-    custom_fields[`${INICIO_ACTIVIDADES}`] = dateToString(company.constitucion);
+    custom_fields[`${INICIO_ACTIVIDADES}`] = dateToString(new Date(company.constitucion));
     custom_fields[`${CELULAR}`] = company.cellphone;
 
     custom_fields[`${ACTIVIDAD_ECONOMICA}`] = selectActivity(

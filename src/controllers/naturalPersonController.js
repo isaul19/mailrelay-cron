@@ -6,6 +6,7 @@ const {
   getSubscribers,
 } = require("../global/mailrelayService");
 const { FIELDS, FIELD_OPTIONS, GROUPS } = require("../global/constants");
+const { dateToString } = require("../utils/dateToString");
 const { CELULAR, APELLIDO_PATERNO, APELLIDO_MATERNO, TIPO_USUARIO } = FIELDS;
 
 const insertNaturalPerson = async (user) => {
@@ -17,7 +18,7 @@ const insertNaturalPerson = async (user) => {
       status: "active",
       email: email.toLowerCase(),
       name: name.toUpperCase().trim(),
-      birthday: dateToString(nacimiento, false),
+      birthday: dateToString(new Date(nacimiento), false),
       city: department,
     };
     const group_ids = [];

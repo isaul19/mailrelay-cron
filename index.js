@@ -24,9 +24,11 @@ const handler = async (event, context) => {
       case "userRegister":
       case "userUpdate":
       case "userUpdatePromo":
-        return await userChangeFunction(user);
+        await userChangeFunction(user);
+        break;
       case "operationSigned":
-        return await operationChangeFunction(user);
+        await operationChangeFunction(user);
+        break;
     }
 
     user.status_trigger = "COMPLETED";
