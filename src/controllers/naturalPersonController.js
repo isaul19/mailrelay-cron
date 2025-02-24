@@ -5,10 +5,85 @@ const {
   patchSubscriber,
   getSubscribers,
 } = require("../global/mailrelayService");
-
+const {
+  FIELDS,
+  FIELD_OPTIONS,
+  GROUPS,
+} = require("../global/constants");
 const { CELULAR, APELLIDO_PATERNO, APELLIDO_MATERNO, TIPO_USUARIO } = FIELDS;
 
-const insertNaturalPerson = async () => {};
+const insertNaturalPerson = async (user) => {
+  const { SIN_OPERACION_PN, GENERAL } = GROUPS;
+  const {
+    email,
+    name,
+    nacimiento,
+    department,
+    cellphone,
+    lname_p,
+    lname_m,
+    content_promo,
+  } = user;
+
+  try {
+    const body = {
+      status: "active",
+      email: email.toLowerCase(),
+      name: name.toUpperCase().trim(),
+      birthday: dateToString(nacimiento, false),
+      city: department,
+    };
+    const group_ids = [];
+    const custom_fields = {};
+
+    // tipo de usuario
+    custom_fields[`${TIPO_USUARIO}`] = Object.values(
+      FIELD_OPTIONS[TIPO_USUARIO][0]
+    )[0];
+
+    // celular
+    custom_fields[`${CELULAR}`] = cellphone;
+
+    // apellidos paterno
+    custom_fields[`${APELLIDO_PATERNO}`] = lname_p.toUpperCase().trim();
+
+    // apellido materno
+    custom_fields[`${APELLIDO_MATERNO}`] = lname_m.toUpperCase().trim();
+
+    group_ids.push(GENERAL, SIN_OPERACION_PN);
+
+    console.log(new Date(), "REGISTRO DE PERSONA NATURAL", {
+      content_promo,
+      ...body,
+      custom_fields,
+      group_ids,
+    });
+
+    const userSubscriber = await postSubscriber({
+      ...body,
+      custom_fields,
+      group_ids,
+    });
+
+    if (!content_promo) {
+      await deleteSubscriber(userSubscriber.id);
+    }
+  } catch (error) {
+    console.log(
+      new Date(),
+      "ERROR CONTROLADOR REGISTRO DE PN:",
+      error.response ? error.response : error
+    );
+    const msgAlert = console.log({
+      process: "ERROR CONTROLADOR REGISTRO DE PN",
+      error: error.response
+        ? `${JSON.stringify(error.response.data)}, code: ${
+            error.response.status
+          }`
+        : error,
+    });  
+  }
+};
 
 const updateNaturalPerson = async (user) => {
   const body = {};

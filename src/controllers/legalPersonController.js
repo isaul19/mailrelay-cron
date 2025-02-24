@@ -5,11 +5,90 @@ const {
   ECONOMIC_ACTIVITY,
   MODEL_PJ,
 } = require("../global/constants");
-const { patchSubscriber, deleteSubscriber, postSubscriber } = require("../global/mailrelayService");
+const { User } = require("../db/models/UsersMailrelay");
+const {
+  patchSubscriber,
+  deleteSubscriber,
+  postSubscriber,
+} = require("../global/mailrelayService");
 
-const { CELULAR, RAZON_SOCIAL, ACTIVIDAD_ECONOMICA, INICIO_ACTIVIDADES, TIPO_USUARIO } = FIELDS;
+const {
+  CELULAR,
+  RAZON_SOCIAL,
+  ACTIVIDAD_ECONOMICA,
+  INICIO_ACTIVIDADES,
+  TIPO_USUARIO,
+} = FIELDS;
 
-const insertLegalPerson = async () => {};
+const insertLegalPerson = async (user) => {
+  const { SIN_OPERACION_PJ, GENERAL } = GROUPS;
+  const { content_promo, company } = user;
+
+  try {
+    if (!company) {
+      throw new Error("No se encontró información de la empresa");
+    }
+
+    const body = {
+      status: "active",
+      email: company.email.toLowerCase(),
+      city: company.department,
+    };
+
+    const group_ids = [];
+    const custom_fields = {};
+
+    custom_fields[`${TIPO_USUARIO}`] = Object.values(
+      FIELD_OPTIONS[TIPO_USUARIO][1]
+    )[0];
+
+    custom_fields[`${RAZON_SOCIAL}`] = company.commercial_name
+      .toUpperCase()
+      .trim();
+
+    custom_fields[`${INICIO_ACTIVIDADES}`] = dateToString(company.constitucion);
+    custom_fields[`${CELULAR}`] = company.cellphone;
+
+    custom_fields[`${ACTIVIDAD_ECONOMICA}`] = selectActivity(
+      company.economic_activity.split("-")[1].trim(),
+      FIELD_OPTIONS[`${ACTIVIDAD_ECONOMICA}`],
+      ECONOMIC_ACTIVITY
+    );
+
+    group_ids.push(GENERAL, SIN_OPERACION_PJ); //agregandodos valores al array
+
+    console.log(new Date(), "REGISTRO DE PERSONA JURIDICA", {
+      ...body,
+      custom_fields,
+      group_ids,
+    });
+
+    const userSubscriber = await postSubscriber({
+      ...body,
+      custom_fields,
+      group_ids,
+    });
+
+    if (!content_promo) {
+      await deleteSubscriber(userSubscriber.id); // Si content_promo es false, elimina el suscriptor (deleteSubscriber).
+    }
+  } catch (error) {
+    // RECUPERAMOS EL ERROR DENTRO DEL REGISTRO DE UNA PERSONA JURIDICA
+    console.log(
+      new Date(),
+      "ERROR CONTROLADOR REGISTRO DE PJ:",
+      error.response ? error.response : error
+    );
+    const msgAlert = console.log({
+      process: "ERROR CONTROLADOR REGISTRO DE PJ",
+      error: error.response
+        ? `${JSON.stringify(error.response.data)}, code: ${
+            error.response.status
+          }`
+        : error,
+    });
+  }
+};
 
 const updateLegalPerson = async (user) => {
   const body = {};
