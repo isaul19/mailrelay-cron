@@ -4,12 +4,20 @@ const {
   patchSubscriber,
   getSubscribers,
   getDeletedSubscribers,
+  restoreSubscriber,
 } = require("../global/mailrelayService");
 const { User } = require("../db/models/UsersMailrelay");
+const { customerBodyParser } = require("../utils/customerBodyParser");
 
 const changePersonStatus = async (user) => {
   try {
-    const { level, company, is_active: currentIsActive, is_active_fields, content_promo } = user;
+    const {
+      level,
+      company,
+      is_active: currentIsActive,
+      is_active_fields,
+      content_promo,
+    } = user;
 
     let email;
     if (level === "30") {
@@ -41,7 +49,9 @@ const changePersonStatus = async (user) => {
     console.log({
       process: "ERROR CONTROLADOR CAMBIO DE ESTADO DE USUARIO",
       error: error.response
-        ? `${JSON.stringify(error.response.data)}, code: ${error.response.status}`
+        ? `${JSON.stringify(error.response.data)}, code: ${
+            error.response.status
+          }`
         : error,
     });
   }
@@ -108,19 +118,31 @@ const updateUser = async (fullDocument, email) => {
           birth_activity: {
             $ifNull: [
               {
-                $cond: [{ $eq: ["$level", "31"] }, "$company.constitucion", "$nacimiento"],
+                $cond: [
+                  { $eq: ["$level", "31"] },
+                  "$company.constitucion",
+                  "$nacimiento",
+                ],
               },
               null,
             ],
           },
           economic_activity: { $ifNull: ["$company.economic_activity", null] },
           cellphone: {
-            $cond: [{ $eq: ["$level", "31"] }, "$company.cellphone", "$cellphone"],
+            $cond: [
+              { $eq: ["$level", "31"] },
+              "$company.cellphone",
+              "$cellphone",
+            ],
           },
           department: {
             $ifNull: [
               {
-                $cond: [{ $eq: ["$level", "31"] }, "$company.department", "$department"],
+                $cond: [
+                  { $eq: ["$level", "31"] },
+                  "$company.department",
+                  "$department",
+                ],
               },
               null,
             ],
